@@ -27,14 +27,16 @@
 }
 
 body {
+    --color-one: #121212;
+    --color-two: #121212;
     height: 100vh;
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(rgb(47, 150, 163), rgb(48, 62, 143));
+    background: linear-gradient(var(--color-one), var(--color-two));
     font-family: sans-serif;
-    color: white;
+    color: #9e9e9e;
 }
 
 .location, .temperature {
