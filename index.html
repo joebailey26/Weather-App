@@ -1,31 +1,28 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Weather</title>
+        <link rel="stylesheet" href="assets/css/style.css">
+    </head>
 
-  <title>Weather Application</title>
-  <meta name="description" content="Weather Application">
-  <meta name="Aurimas Karvelis" content="github.com/aurimaskarvelis">
-
-  <link rel="stylesheet" href="styles.css">
-
-</head>
-
-<body>
-    <div class="location">
-        <h1 class="location-timezone">Timezone</h1>
-        <canvas class="icon" width="128" height="128"></canvas>
-    </div>
-    <div class="temperature">
-        <div class="degree-section">
-        <h2 class="temperature-degree">00</h2>
-        <span>F</span>
+    <body>
+        <div class="location">
+            <h1 class="location-timezone"></h1>
+            <canvas class="icon" width="128" height="128"></canvas>
         </div>
-       <div class="temperature-description">Sample Text</div>
-   </div> 
-  
-   <script src="script.js"></script>
-   <script src="skycons.js"></script>
-</body>
+
+        <div class="temperature">
+            <div class="degree-section">
+                <p class="temperature-degree"><sup></sup></p>
+            </div>
+            <div class="temperature-description"></div>
+        </div>
+
+        <script type="text/javascript" src="assets/js/skycons.js"></script>
+        <script type="text/javascript" src="assets/js/app.js"></script>
+    </body>
+
 </html>

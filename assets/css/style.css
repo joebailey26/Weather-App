@@ -1,0 +1,69 @@
+@font-face {
+    font-family: "Inconsolata";
+    src: url("../fonts/Inconsolata-VF.ttf") format('TrueType');
+    font-weight: 125 950;
+    font-stretch: 75% 125%;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@supports (font-variation-settings: 'wdth' 115) {
+    body {
+       font-family: Inconsolata!important;
+       font-optical-sizing: auto;
+       font-size: 2em;
+       --text-weight: 400;
+       --text-width: 100%
+    }
+    h1.location-timezone, .degree-section {
+        font-weight: var(--text-weight)!important;
+        font-variation-settings: 'wdth' var(--text-width)!important;
+    }
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(rgb(47, 150, 163), rgb(48, 62, 143));
+    font-family: sans-serif;
+    color: white;
+}
+
+.location, .temperature {
+    height: 30vh;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.temperature {
+    flex-direction: column;
+} 
+
+.degree-section {
+    display: flex;
+    align-items: center;
+    font-size: 1.5em;
+}
+
+.degree-section:hover {
+    cursor: pointer;
+}
+
+.location-timezone {
+    font-size: 2em;
+    margin: 0.5em 0;
+}
+
+.temperature-degree sup {
+    font-size: 0.75em;
+}
