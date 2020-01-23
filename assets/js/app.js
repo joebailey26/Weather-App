@@ -5,6 +5,41 @@ window.addEventListener('load', ()=> {
     const temperatureSection = document.querySelector(".temperature");
     let temperatureFormat = document.querySelector(".temperature sup");
 
+    window.CSS.registerProperty({
+        name: '--color-one',
+        syntax: '<color>',
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: '#121212', // String, initial value of this property
+    });
+
+    window.CSS.registerProperty({
+        name: '--color-two',
+        syntax: '<color>',
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: '#121212', // String, initial value of this property
+    });
+
+    window.CSS.registerProperty({
+        name: '--main-color',
+        syntax: '<color>',
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: '#121212', // String, initial value of this property
+    });
+
+    window.CSS.registerProperty({
+        name: '--text-weight',
+        syntax: '<number>',
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: '400', // String, initial value of this property
+    });
+
+    window.CSS.registerProperty({
+        name: '--text-width', // String, name of the custom property
+        syntax: '<percentage>', // String, how to parse this property. Defaults to *
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: '100%', // String, initial value of this property
+    });
+
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => {
            //Set Lat and Long Co-Ords
@@ -38,41 +73,6 @@ window.addEventListener('load', ()=> {
                     sup.appendChild(node);
                     temperatureDegree.appendChild(sup);
                 };
-
-                window.CSS.registerProperty({
-                    name: '--color-one',
-                    syntax: '<color>',
-                    inherits: true, // Boolean, if true should inherit down the DOM tree
-                    initialValue: '#121212', // String, initial value of this property
-                });
-
-                window.CSS.registerProperty({
-                    name: '--color-two',
-                    syntax: '<color>',
-                    inherits: true, // Boolean, if true should inherit down the DOM tree
-                    initialValue: '#121212', // String, initial value of this property
-                });
-
-                window.CSS.registerProperty({
-                    name: '--main-color',
-                    syntax: '<color>',
-                    inherits: true, // Boolean, if true should inherit down the DOM tree
-                    initialValue: '#121212', // String, initial value of this property
-                });
-
-                window.CSS.registerProperty({
-                    name: '--text-weight',
-                    syntax: '<number>',
-                    inherits: true, // Boolean, if true should inherit down the DOM tree
-                    initialValue: '400', // String, initial value of this property
-                });
-
-                window.CSS.registerProperty({
-                    name: '--text-width', // String, name of the custom property
-                    syntax: '<percentage>', // String, how to parse this property. Defaults to *
-                    inherits: true, // Boolean, if true should inherit down the DOM tree
-                    initialValue: '100%', // String, initial value of this property
-                });
 
                 if (celsius < 0) {
                     document.body.style.setProperty('--color-one', '#4078C0');
@@ -127,6 +127,16 @@ window.addEventListener('load', ()=> {
 
                 document.querySelector(".read-aloud").addEventListener('click', () => {
                     window.speechSynthesis.speak(new SpeechSynthesisUtterance("The temperature in " + data.timezone + " is currently " + Math.floor(celsius) + " degrees celsius. " + "Expect " + summary));
+                })
+
+                document.querySelector(".share").addEventListener('click', () => {
+                    if (navigator.share) {
+                        navigator.share({
+                          title: 'Weather App',
+                          text: 'This is a weather app',
+                          url: 'https://joebailey26.github.io/Weather-App/index.html',
+                        })
+                      }
                 })
 
                 // Change temperature to Celsius/Farenheit 
