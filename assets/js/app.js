@@ -46,7 +46,7 @@ window.addEventListener('load', ()=> {
            let lat = position.coords.latitude;
 
            const proxy = 'https://cors-anywhere.herokuapp.com/';
-           let api = `${proxy}https://api.darksky.net/forecast/b7d0f9fb3a1cfad18566f72d1a59fade/${lat},${long}`;
+           let api = `${proxy}https://api.darksky.net/forecast/6d17568a176251f3630f210af5bd987e/${lat},${long}`;
            
            fetch(api)
             .then(response => {
@@ -60,12 +60,14 @@ window.addEventListener('load', ()=> {
                 temperatureDegree.textContent = temperature;
                 temperatureDescription.textContent = summary;
                 locationTimezone.textContent = data.timezone;
+                var precipIntensity = data.currently.precipIntensity;
 
                 // Celsius
                 let celsius = (temperature - 32) * (5 / 9);
                 temperatureDegree.textContent = Math.floor(celsius);
                 addTempFormat("C");
 
+                // Change temperature to Celsius/Farenheit 
                 function addTempFormat(format) {
                     let sup = document.createElement("sup");
                     let node = document.createTextNode(format);
@@ -73,6 +75,20 @@ window.addEventListener('load', ()=> {
                     temperatureDegree.appendChild(sup);
                 };
 
+                temperatureDegree.addEventListener('click', () => {
+                    temperatureDegree = document.querySelector(".temperature-degree");
+                    temperatureFormat = document.querySelector(".temperature sup");
+                    if (temperatureFormat.textContent === "F") {
+                        temperatureDegree.textContent = Math.floor(celsius);
+                        addTempFormat("C");
+                    }
+                    else {
+                        temperatureDegree.textContent = temperature;
+                        addTempFormat("F");
+                    }
+                })
+
+                //Set colors and text based on weather conditions
                 if (celsius < 0) {
                     document.body.style.setProperty('--color-one', '#4078C0');
                     document.body.style.setProperty('--color-two', '#4078C0');
@@ -113,6 +129,7 @@ window.addEventListener('load', ()=> {
                 else if (icon === "rain") {
                     document.body.style.setProperty('--color-two', '#264184');
                     makeItRain();
+                    rainIntensity();
                 }
                 else if (icon === "snow", "sleet") {
                     document.body.style.setProperty('--color-two', '#FFFFFF');
@@ -121,13 +138,43 @@ window.addEventListener('load', ()=> {
                     document.body.style.setProperty('--color-two', '#B4BAC6');
                 }
 
+                function rainIntensity() {
+                    //Change rain intensity
+                    if (precipIntensity < 0.25) {
+                        document.querySelectorAll(".stem").forEach(element => {
+                            element.style.width = "1px";
+                        });
+                    }
+                    else if (precipIntensity < 0.50) {
+                        document.querySelectorAll(".stem").forEach(element => {
+                            element.style.width = "2px";
+                        });
+                    }
+                    else if (precipIntensity > 0.50) {
+                        document.querySelectorAll(".stem").forEach(element => {
+                            element.style.width = "3px";
+                        });
+                    }
+                }
+
                 // Set Icon
                 setIcons(icon, document.querySelector('.icon'));
 
+                function setIcons(icon, iconID) {
+                    const skycons = new Skycons({color: "#000"});
+                    const currentIcon = icon.replace(/-/g, "_").toUpperCase();
+                    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        skycons.play();
+                    }
+                    return skycons.set(iconID, Skycons[currentIcon]);
+                }
+
+                //Create speak-aloud event
                 document.querySelector(".read-aloud").addEventListener('click', () => {
                     window.speechSynthesis.speak(new SpeechSynthesisUtterance("The temperature in " + data.timezone + " is currently " + Math.floor(celsius) + " degrees celsius. " + "Expect " + summary));
                 })
 
+                //Create share event
                 document.querySelector(".share").addEventListener('click', () => {
                     if (navigator.share) {
                         navigator.share({
@@ -141,37 +188,14 @@ window.addEventListener('load', ()=> {
                     }
                 })
 
-                // Change temperature to Celsius/Farenheit 
-                temperatureDegree.addEventListener('click', () => {
-                    temperatureDegree = document.querySelector(".temperature-degree");
-                    temperatureFormat = document.querySelector(".temperature sup");
-                    if (temperatureFormat.textContent === "F") {
-                        temperatureDegree.textContent = Math.floor(celsius);
-                        addTempFormat("C");
-                    }
-                    else {
-                        temperatureDegree.textContent = temperature;
-                        addTempFormat("F");
-                    }
-                })
-
                 document.body.classList.add("loaded");
 
             });
 
         });
    
-    } 
+    }
 
-    function setIcons(icon, iconID) {
-        const skycons = new Skycons({color: "#000"});
-        const currentIcon = icon.replace(/-/g, "_").toUpperCase();
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            skycons.play();
-        }
-        return skycons.set(iconID, Skycons[currentIcon]);
-    }  
-    
 });
 
 var makeItRain = function() {  
@@ -192,6 +216,7 @@ var makeItRain = function() {
       backDrops += '<div class="drop" style="right: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
     }
 
+    //Add rain drops to DOM
     if (increment > 100) {
         var rootNodeStartOne = '<div class="rain front-row">';
         var rootNodeStartTwo = '<div class="rain back-row">';
@@ -200,6 +225,6 @@ var makeItRain = function() {
         var rootNodeBackDrops = rootNodeStartTwo + backDrops + rootNodeEnd;
         document.body.insertAdjacentHTML('afterbegin', rootNodedrops);
         document.body.insertAdjacentHTML('afterbegin', rootNodeBackDrops);
-    }
+    }    
   }
   
