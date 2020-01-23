@@ -39,6 +39,41 @@ window.addEventListener('load', ()=> {
                     temperatureDegree.appendChild(sup);
                 };
 
+                window.CSS.registerProperty({
+                    name: '--color-one',
+                    syntax: '<color>',
+                    inherits: true, // Boolean, if true should inherit down the DOM tree
+                    initialValue: '#121212', // String, initial value of this property
+                });
+
+                window.CSS.registerProperty({
+                    name: '--color-two',
+                    syntax: '<color>',
+                    inherits: true, // Boolean, if true should inherit down the DOM tree
+                    initialValue: '#121212', // String, initial value of this property
+                });
+
+                window.CSS.registerProperty({
+                    name: '--main-color',
+                    syntax: '<color>',
+                    inherits: true, // Boolean, if true should inherit down the DOM tree
+                    initialValue: '#121212', // String, initial value of this property
+                });
+
+                window.CSS.registerProperty({
+                    name: '--text-weight',
+                    syntax: '<number>',
+                    inherits: true, // Boolean, if true should inherit down the DOM tree
+                    initialValue: '400', // String, initial value of this property
+                });
+
+                window.CSS.registerProperty({
+                    name: '--text-width', // String, name of the custom property
+                    syntax: '<percentage>', // String, how to parse this property. Defaults to *
+                    inherits: true, // Boolean, if true should inherit down the DOM tree
+                    initialValue: '100%', // String, initial value of this property
+                });
+
                 if (celsius < 0) {
                     document.body.style.setProperty('--color-one', '#4078C0');
                     document.body.style.setProperty('--color-two', '#4078C0');
