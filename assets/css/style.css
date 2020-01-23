@@ -39,6 +39,11 @@ body {
     background: linear-gradient(var(--color-one), var(--color-two));
     font-family: sans-serif;
     color: var(--main-color);
+    position: relative;
+}
+
+:link, :visited {
+    color: var(--main-color)
 }
 
 svg {
@@ -84,11 +89,19 @@ body:not(.loaded) svg, body:not(.loaded) footer {
     font-weight: 600;
 }
 
+.drawing {
+    background-image: paint(drawing);
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    z-index: -3;
+}
+
 footer {
     bottom: 1em;
     position: absolute;
     font-size: 0.75em;
-    margin: 1em;
+    margin: 1em auto;
     text-align: center;
 }
 

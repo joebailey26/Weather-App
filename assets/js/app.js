@@ -39,11 +39,40 @@ window.addEventListener('load', ()=> {
         initialValue: '100%', // String, initial value of this property
     });
 
+    window.CSS.registerProperty({
+        name: '--drawing-color', // String, name of the custom property
+        syntax: '<color>', // String, how to parse this property. Defaults to *
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: 'black', // String, initial value of this property
+    });
+
+    window.CSS.registerProperty({
+        name: '--lat',
+        syntax: '<number>',
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: '0', // String, initial value of this property
+    });
+
+    window.CSS.registerProperty({
+        name: '--long',
+        syntax: '<number>',
+        inherits: true, // Boolean, if true should inherit down the DOM tree
+        initialValue: '0', // String, initial value of this property
+    });
+
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => {
-           //Set Lat and Long Co-Ords
-           let long = position.coords.longitude;
-           let lat = position.coords.latitude;
+            //Set Lat and Long Co-Ords
+            let long = position.coords.longitude;
+            let lat = position.coords.latitude;
+            document.body.style.setProperty('--lat', lat);
+            document.body.style.setProperty('--long', long);
+            document.body.style.setProperty('--drawing-color', 'rgba(' + lat + ',' + long + ',' + lat + ',' + 0.1 + ')');
+
+            document.querySelectorAll(".drawing").forEach(function(element) {
+                element.style.top = Math.random() * lat * 2.5 + "%";
+                element.style.left = Math.random() * lat * 2.5 + "%";
+            })
 
            const proxy = 'https://cors-anywhere.herokuapp.com/';
            let api = `${proxy}https://api.darksky.net/forecast/6d17568a176251f3630f210af5bd987e/${lat},${long}`;
@@ -138,8 +167,8 @@ window.addEventListener('load', ()=> {
                     document.body.style.setProperty('--color-two', '#B4BAC6');
                 }
 
+                //Change rain intensity
                 function rainIntensity() {
-                    //Change rain intensity
                     if (precipIntensity < 0.25) {
                         document.querySelectorAll(".stem").forEach(element => {
                             element.style.width = "1px";
@@ -226,5 +255,6 @@ var makeItRain = function() {
         document.body.insertAdjacentHTML('afterbegin', rootNodedrops);
         document.body.insertAdjacentHTML('afterbegin', rootNodeBackDrops);
     }    
-  }
-  
+}
+
+CSS.paintWorklet.addModule('assets/js/drawing.js');
