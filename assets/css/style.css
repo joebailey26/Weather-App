@@ -6,12 +6,6 @@
     font-style: normal;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 @supports (font-variation-settings: 'wdth' 115) {
     body {
        font-family: Inconsolata!important;
@@ -23,6 +17,13 @@
     h1.location-timezone, .degree-section, .temperature-description, .temperature-degree sup {
         font-weight: var(--text-weight)!important;
         font-variation-settings: 'wdth' var(--text-width)!important;
+    }
+}
+
+@media (max-width: 650px) {
+    body {
+        font-size: 1.5em;
+        word-break: break-all;
     }
 }
 
@@ -44,21 +45,24 @@ svg {
     fill: var(--main-color)
 }
 
-body:not(.loaded) svg {
+body:not(.loaded) svg, body:not(.loaded) footer {
     display: none;
 }
 
 .location, .temperature {
-    height: 30vh;
-    width: 50%;
-    display: flex;
     justify-content: space-around;
     align-items: center;
+    text-align: center;
+    margin: 1em auto;
 }
 
 .temperature {
     flex-direction: column;
-} 
+}
+
+.temperature-degree {
+    margin: 0 auto 1em;
+}
 
 .degree-section {
     display: flex;
@@ -78,4 +82,16 @@ body:not(.loaded) svg {
 .temperature-degree sup {
     font-size: 0.5em;
     font-weight: 600;
+}
+
+footer {
+    bottom: 1em;
+    position: absolute;
+    font-size: 0.75em;
+    margin: 1em;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
 }

@@ -2,7 +2,6 @@ window.addEventListener('load', ()=> {
     const temperatureDescription = document.querySelector(".temperature-description");
     let temperatureDegree = document.querySelector(".temperature-degree");
     const locationTimezone = document.querySelector(".location-timezone");
-    const temperatureSection = document.querySelector(".temperature");
     let temperatureFormat = document.querySelector(".temperature sup");
 
     window.CSS.registerProperty({
@@ -136,11 +135,14 @@ window.addEventListener('load', ()=> {
                           text: 'This is a weather app',
                           url: 'https://joebailey26.github.io/Weather-App/index.html',
                         })
-                      }
+                    }
+                    else {
+                        window.open('mailto:?subject=Weather App', '_blank');
+                    }
                 })
 
                 // Change temperature to Celsius/Farenheit 
-                temperatureSection.addEventListener('click', () => {
+                temperatureDegree.addEventListener('click', () => {
                     temperatureDegree = document.querySelector(".temperature-degree");
                     temperatureFormat = document.querySelector(".temperature sup");
                     if (temperatureFormat.textContent === "F") {
