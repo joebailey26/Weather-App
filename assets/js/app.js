@@ -4,75 +4,69 @@ window.addEventListener('load', ()=> {
     const locationTimezone = document.querySelector(".location-timezone");
     let temperatureFormat = document.querySelector(".temperature sup");
 
-    window.CSS.registerProperty({
-        name: '--color-one',
-        syntax: '<color>',
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: '#121212', // String, initial value of this property
-    });
-
-    window.CSS.registerProperty({
-        name: '--color-two',
-        syntax: '<color>',
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: '#121212', // String, initial value of this property
-    });
-
-    window.CSS.registerProperty({
-        name: '--main-color',
-        syntax: '<color>',
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: '#121212', // String, initial value of this property
-    });
-
-    window.CSS.registerProperty({
-        name: '--text-weight',
-        syntax: '<number>',
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: '400', // String, initial value of this property
-    });
-
-    window.CSS.registerProperty({
-        name: '--text-width', // String, name of the custom property
-        syntax: '<percentage>', // String, how to parse this property. Defaults to *
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: '100%', // String, initial value of this property
-    });
-
-    window.CSS.registerProperty({
-        name: '--drawing-color', // String, name of the custom property
-        syntax: '<color>', // String, how to parse this property. Defaults to *
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: 'black', // String, initial value of this property
-    });
-
-    window.CSS.registerProperty({
-        name: '--lat',
-        syntax: '<number>',
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: '0', // String, initial value of this property
-    });
-
-    window.CSS.registerProperty({
-        name: '--long',
-        syntax: '<number>',
-        inherits: true, // Boolean, if true should inherit down the DOM tree
-        initialValue: '0', // String, initial value of this property
-    });
+    if (window.CSS.registerProperty) { 
+        window.CSS.registerProperty({
+            name: '--color-one',
+            syntax: '<color>',
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: '#121212', // String, initial value of this property
+        });
+    
+        window.CSS.registerProperty({
+            name: '--color-two',
+            syntax: '<color>',
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: '#121212', // String, initial value of this property
+        });
+    
+        window.CSS.registerProperty({
+            name: '--main-color',
+            syntax: '<color>',
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: '#121212', // String, initial value of this property
+        });
+    
+        window.CSS.registerProperty({
+            name: '--text-weight',
+            syntax: '<number>',
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: '400', // String, initial value of this property
+        });
+    
+        window.CSS.registerProperty({
+            name: '--text-width', // String, name of the custom property
+            syntax: '<percentage>', // String, how to parse this property. Defaults to *
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: '100%', // String, initial value of this property
+        });
+    
+        window.CSS.registerProperty({
+            name: '--drawing-color', // String, name of the custom property
+            syntax: '<color>', // String, how to parse this property. Defaults to *
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: 'black', // String, initial value of this property
+        });
+    
+        window.CSS.registerProperty({
+            name: '--lat',
+            syntax: '<number>',
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: '0', // String, initial value of this property
+        });
+    
+        window.CSS.registerProperty({
+            name: '--long',
+            syntax: '<number>',
+            inherits: true, // Boolean, if true should inherit down the DOM tree
+            initialValue: '0', // String, initial value of this property
+        });
+    }
 
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => {
             //Set Lat and Long Co-Ords
             let long = position.coords.longitude;
             let lat = position.coords.latitude;
-            document.body.style.setProperty('--lat', lat);
-            document.body.style.setProperty('--long', long);
-            document.body.style.setProperty('--drawing-color', 'rgba(' + lat + ',' + long + ',' + lat + ',' + 0.1 + ')');
-
-            document.querySelectorAll(".drawing").forEach(function(element) {
-                element.style.top = Math.random() * lat * 2.5 + "%";
-                element.style.left = Math.random() * lat * 2.5 + "%";
-            })
 
            const proxy = 'https://cors-anywhere.herokuapp.com/';
            let api = `${proxy}https://api.darksky.net/forecast/6d17568a176251f3630f210af5bd987e/${lat},${long}`;
@@ -217,6 +211,19 @@ window.addEventListener('load', ()=> {
                     }
                 })
 
+                //Create drawings
+                if (CSS.paintWorklet) { 
+                    CSS.paintWorklet.addModule('assets/js/drawing.js');
+                }
+                document.body.style.setProperty('--lat', lat);
+                document.body.style.setProperty('--long', long);
+                document.body.style.setProperty('--drawing-color', 'rgba(' + lat + ',' + long + ',' + lat + ',' + 0.1 + ')');
+
+                document.querySelectorAll(".drawing").forEach(function(element) {
+                    element.style.top = Math.random() * lat * 2.5 + "%";
+                    element.style.left = Math.random() * lat * 2.5 + "%";
+                })
+
                 document.body.classList.add("loaded");
 
             });
@@ -256,5 +263,3 @@ var makeItRain = function() {
         document.body.insertAdjacentHTML('afterbegin', rootNodeBackDrops);
     }    
 }
-
-CSS.paintWorklet.addModule('assets/js/drawing.js');

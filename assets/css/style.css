@@ -28,7 +28,7 @@
 }
 
 body {
-    --main-color: #121212;
+    --main-color: #fff;
     --color-one: #121212;
     --color-two: #121212;
     height: 100vh;
@@ -40,6 +40,18 @@ body {
     font-family: sans-serif;
     color: var(--main-color);
     position: relative;
+}
+
+body:before {
+    content: "Loading...";
+}
+
+body.loaded:before {
+    content: none;
+}
+
+body.loaded {
+    --main-color: #121212;
 }
 
 :link, :visited {
