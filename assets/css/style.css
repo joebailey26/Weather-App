@@ -75,6 +75,7 @@ body:not(.loaded) svg, body:not(.loaded) footer {
 
 .temperature {
     flex-direction: column;
+    margin-bottom: 5em;
 }
 
 .temperature-degree {
@@ -119,4 +120,5 @@ footer {
 
 footer p {
     margin: 0;
+    line-height: 2em;
 }

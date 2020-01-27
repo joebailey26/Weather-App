@@ -83,6 +83,7 @@ window.addEventListener('load', ()=> {
                 temperatureDegree.textContent = temperature;
                 temperatureDescription.textContent = summary;
                 locationTimezone.textContent = data.timezone;
+
                 var precipIntensity = data.currently.precipIntensity;
 
                 // Celsius
@@ -215,14 +216,38 @@ window.addEventListener('load', ()=> {
                 if (CSS.paintWorklet) { 
                     CSS.paintWorklet.addModule('assets/js/drawing.js');
                 }
+                if (lat < 0) {
+                    lat = Math.abs(lat)
+                }
+                if (long < 0) {
+                    long = Math.abs(long)
+                }
                 document.body.style.setProperty('--lat', lat);
                 document.body.style.setProperty('--long', long);
                 document.body.style.setProperty('--drawing-color', 'rgba(' + lat + ',' + long + ',' + lat + ',' + 0.1 + ')');
 
-                document.querySelectorAll(".drawing").forEach(function(element) {
-                    element.style.top = Math.random() * lat * 2.5 + "%";
-                    element.style.left = Math.random() * lat * 2.5 + "%";
-                })
+                // Create Drawing HTML Element
+                class DrawingDiv extends HTMLElement {
+                    constructor() {
+                        // Always call super first in constructor
+                        super();
+
+                        // Create a shadow root
+                        var shadow = this.attachShadow({mode: 'open'});
+                
+                        // Create element
+                        var wrapper = document.createElement('div');
+                        wrapper.setAttribute('class','drawing');
+
+                        // Attach styles
+                        wrapper.style.top = Math.random() * lat * 2.5 + "%";
+                        wrapper.style.left = Math.random() * lat * 2.5 + "%";
+                
+                        // Attach the created elements to the shadow dom
+                        shadow.appendChild(wrapper);
+                    }
+                }
+                customElements.define('drawing-div', DrawingDiv);
 
                 document.body.classList.add("loaded");
 
