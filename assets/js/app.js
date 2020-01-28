@@ -81,15 +81,27 @@ window.addEventListener('load', ()=> {
             }
             else {
                 drawingLat = lat
-            }
+            };
             if (long < 0) {
                 drawingLong = Math.abs(long)
             }
             else {
                 drawingLong = long
+            };
+            if (drawingLong < 10) {
+                drawingLong = drawingLong * 10
+            };
+            if (drawingLat < 10) {
+                drawingLat = drawingLat * 10
             }
-            document.body.style.setProperty('--lat', drawingLat);
-            document.body.style.setProperty('--long', drawingLong);
+            if (drawingLong > 10) {
+                drawingLong = drawingLong / 5
+            };
+            if (drawingLat > 10) {
+                drawingLat = drawingLat / 5
+            }
+            document.body.style.setProperty('--lat', drawingLat * 1.5);
+            document.body.style.setProperty('--long', drawingLong * 1.5);
             document.body.style.setProperty('--drawing-color', 'rgba(' + drawingLat + ',' + drawingLong + ',' + drawingLat + ',' + 0.1 + ')');
 
             // Create Drawing HTML Element
@@ -106,8 +118,16 @@ window.addEventListener('load', ()=> {
                     wrapper.setAttribute('class','drawing');
 
                     // Attach styles
-                    wrapper.style.top = Math.random() * lat * 2.5 + "%";
-                    wrapper.style.left = Math.random() * lat * 2.5 + "%";
+                    let top = Math.random() * 50;
+                    let left = Math.random() * 50;
+                    if (top > 70) {
+                        top = 70
+                    }
+                    if (left > 70) {
+                        left = 70
+                    }
+                    wrapper.style.top = top + "%";
+                    wrapper.style.left = left + "%";
 
                     // Create some CSS to apply to the shadow dom
                     var style = document.createElement('style');

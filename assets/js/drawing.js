@@ -5,8 +5,8 @@ registerPaint('drawing', class {
     const color = properties.get('--drawing-color');
 
     // Determine the center point and radius.
-    const xCircle = properties.get('--long') * Math.random();
-    const yCircle = properties.get('--lat') * Math.random();
+    const xCircle = properties.get('--long');
+    const yCircle = properties.get('--lat');
 
     // Draw the circle o/
     ctx.beginPath();
