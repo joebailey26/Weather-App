@@ -1,14 +1,3 @@
-html {
-    height: 100%;
-    overflow: hidden;
-  }
-  
-  body {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-  }
-  
   .rain {
     position: absolute;
     left: 0;

@@ -27,19 +27,23 @@
     }
 }
 
+html {
+    min-height: 100%;
+}
+  
 body {
+    margin: 0;
+    padding: 5% 0;
+    position: relative;
     --main-color: #fff;
     --color-one: #121212;
     --color-two: #121212;
-    height: 100vh;
     display: flex;
-    justify-content: center;
     flex-direction: column;
     align-items: center;
     background: linear-gradient(var(--color-one), var(--color-two));
     font-family: sans-serif;
     color: var(--main-color);
-    position: relative;
 }
 
 body:before {
@@ -67,15 +71,8 @@ body:not(.loaded) svg, body:not(.loaded) footer {
 }
 
 .location, .temperature {
-    justify-content: space-around;
-    align-items: center;
     text-align: center;
     margin: 1em auto;
-}
-
-.temperature {
-    flex-direction: column;
-    margin-bottom: 5em;
 }
 
 .temperature-degree {
@@ -83,8 +80,6 @@ body:not(.loaded) svg, body:not(.loaded) footer {
 }
 
 .degree-section {
-    display: flex;
-    align-items: center;
     font-size: 1.5em;
 }
 
@@ -111,8 +106,6 @@ body:not(.loaded) svg, body:not(.loaded) footer {
 }
 
 footer {
-    bottom: 1em;
-    position: absolute;
     font-size: 0.75em;
     margin: 1em auto;
     text-align: center;
