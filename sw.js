@@ -64,4 +64,4 @@ self.addEventListener('notificationclick', function(e) {
       clients.openWindow('https://joebailey26.github.io/Weather-App/index.html');
       notification.close();
     }
-  });
+});

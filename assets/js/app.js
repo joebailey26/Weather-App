@@ -260,16 +260,16 @@ window.addEventListener('load', ()=> {
                         if (refresh) {
                             if (Notification.permission == 'granted') {
                                 navigator.serviceWorker.getRegistration().then(function(reg) {
-                                var options = {
-                                    body: 'Expect ' + summary,
-                                    icon: 'android-chrome-192x192.png',
-                                    vibrate: [100, 50, 100],
-                                    data: {
-                                        dateOfArrival: Date.now(),
-                                        primaryKey: 1
-                                    }
-                                };
-                                reg.showNotification('It is ' + Math.floor(celsius) + '° right now', options);
+                                    var options = {
+                                        body: 'Expect ' + summary,
+                                        icon: 'android-chrome-192x192.png',
+                                        vibrate: [100, 50, 100],
+                                        data: {
+                                            dateOfArrival: Date.now(),
+                                            primaryKey: 1
+                                        }
+                                    };
+                                    reg.showNotification('It is ' + Math.floor(celsius) + '° right now', options);
                                 });
                             }
                         }
