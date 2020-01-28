@@ -1,5 +1,6 @@
 window.addEventListener('load', ()=> {
-    Notification.requestPermission();
+
+    document.querySelector(".notifications").addEventListener("click", () => {Notification.requestPermission();})
 
     const temperatureDescription = document.querySelector(".temperature-description");
     let temperatureDegree = document.querySelector(".temperature-degree");
@@ -275,7 +276,7 @@ window.addEventListener('load', ()=> {
                         }
                     })
             }
-            getWeather("yes");
+            getWeather();
 
             //Refresh weather after 30 minutes
             setInterval(function(){ getWeather("yes"); }, 1.8e+6);
