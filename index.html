@@ -7,12 +7,12 @@
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/css/rain.css">
     
-        <link rel='manifest' href='/manifest.json'>
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2d89ef">
+        <link rel='manifest' href='manifest.json'>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+        <link rel="mask-icon" href="safari-pinned-tab.svg" color="#2d89ef">
         <meta name="apple-mobile-web-app-title" content="Weather App">
         <meta name="application-name" content="Weather App">
         <meta name="msapplication-TileColor" content="#2d89ef">
@@ -75,7 +75,7 @@
             // Check compatibility for the browser we're running this Service Worker in
             if ("serviceWorker" in navigator) {
                 // Register the service worker
-                navigator.serviceWorker.register("sw.js", {scope: "./"})
+                navigator.serviceWorker.register("sw.js")
             }
 
         </script>
