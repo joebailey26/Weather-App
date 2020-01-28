@@ -52,3 +52,16 @@ function updateCache(request, response) {
     return cache.put(request, response);
   });
 }
+
+self.addEventListener('notificationclick', function(e) {
+    var notification = e.notification;
+    var primaryKey = notification.data.primaryKey;
+    var action = e.action;
+  
+    if (action === 'close') {
+      notification.close();
+    } else {
+      clients.openWindow('https://joebailey26.github.io/Weather-App/index.html');
+      notification.close();
+    }
+  });

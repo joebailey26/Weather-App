@@ -1,4 +1,6 @@
 window.addEventListener('load', ()=> {
+    Notification.requestPermission();
+
     const temperatureDescription = document.querySelector(".temperature-description");
     let temperatureDegree = document.querySelector(".temperature-degree");
     const locationTimezone = document.querySelector(".location-timezone");
@@ -66,20 +68,22 @@ window.addEventListener('load', ()=> {
             //Set Lat and Long Co-Ords
             let long = position.coords.longitude;
             let lat = position.coords.latitude;
+            let drawingLat;
+            let drawingLong;
 
             //Create drawings
             if (CSS.paintWorklet) { 
                 CSS.paintWorklet.addModule('assets/js/drawing.js');
             }
             if (lat < 0) {
-                lat = Math.abs(lat)
+                drawingLat = Math.abs(lat)
             }
             if (long < 0) {
-                long = Math.abs(long)
+                drawingLong = Math.abs(long)
             }
-            document.body.style.setProperty('--lat', lat);
-            document.body.style.setProperty('--long', long);
-            document.body.style.setProperty('--drawing-color', 'rgba(' + lat + ',' + long + ',' + lat + ',' + 0.1 + ')');
+            document.body.style.setProperty('--lat', drawingLat);
+            document.body.style.setProperty('--long', drawingLong);
+            document.body.style.setProperty('--drawing-color', 'rgba(' + drawingLat + ',' + drawingLong + ',' + drawingLat + ',' + 0.1 + ')');
 
             // Create Drawing HTML Element
             class DrawingDiv extends HTMLElement {
@@ -108,7 +112,7 @@ window.addEventListener('load', ()=> {
             const proxy = 'https://cors-anywhere.herokuapp.com/';
             let api = `${proxy}https://api.darksky.net/forecast/6d17568a176251f3630f210af5bd987e/${lat},${long}`;
 
-            function getWeather() {
+            function getWeather(refresh) {
                 fetch(api)
                     .then(response => {
                         return response.json();
@@ -251,12 +255,30 @@ window.addEventListener('load', ()=> {
                         })
 
                         document.body.classList.add("loaded");
+
+                        //Send Notification
+                        if (refresh) {
+                            if (Notification.permission == 'granted') {
+                                navigator.serviceWorker.getRegistration().then(function(reg) {
+                                var options = {
+                                    body: 'Expect ' + summary,
+                                    icon: 'android-chrome-192x192.png',
+                                    vibrate: [100, 50, 100],
+                                    data: {
+                                        dateOfArrival: Date.now(),
+                                        primaryKey: 1
+                                    }
+                                };
+                                reg.showNotification('It is ' + Math.floor(celsius) + '° right now', options);
+                                });
+                            }
+                        }
                     })
             }
-            getWeather();
+            getWeather("yes");
 
             //Refresh weather after 30 minutes
-            setInterval(function(){ getWeather(); }, 1.8e+6);
+            setInterval(function(){ getWeather("yes"); }, 1.8e+6);
         })
     }
 });
