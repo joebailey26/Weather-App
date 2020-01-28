@@ -29,6 +29,8 @@
 
 html {
     min-height: 100%;
+    align-content: center;
+    display: grid;
 }
   
 body {
