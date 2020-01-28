@@ -61,202 +61,204 @@ window.addEventListener('load', ()=> {
             initialValue: '0', // String, initial value of this property
         });
     }
-
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => {
             //Set Lat and Long Co-Ords
             let long = position.coords.longitude;
             let lat = position.coords.latitude;
 
-           const proxy = 'https://cors-anywhere.herokuapp.com/';
-           let api = `${proxy}https://api.darksky.net/forecast/6d17568a176251f3630f210af5bd987e/${lat},${long}`;
-           
-           fetch(api)
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                //Get Data
-                let {temperature, summary, icon } = data.currently;
+            //Create drawings
+            if (CSS.paintWorklet) { 
+                CSS.paintWorklet.addModule('assets/js/drawing.js');
+            }
+            if (lat < 0) {
+                lat = Math.abs(lat)
+            }
+            if (long < 0) {
+                long = Math.abs(long)
+            }
+            document.body.style.setProperty('--lat', lat);
+            document.body.style.setProperty('--long', long);
+            document.body.style.setProperty('--drawing-color', 'rgba(' + lat + ',' + long + ',' + lat + ',' + 0.1 + ')');
 
-                //Set DOM Elements from the APi
-                temperatureDegree.textContent = temperature;
-                temperatureDescription.textContent = summary;
-                locationTimezone.textContent = data.timezone;
+            // Create Drawing HTML Element
+            class DrawingDiv extends HTMLElement {
+                constructor() {
+                    // Always call super first in constructor
+                    super();
 
-                var precipIntensity = data.currently.precipIntensity;
+                    // Create a shadow root
+                    var shadow = this.attachShadow({mode: 'open'});
+            
+                    // Create element
+                    var wrapper = document.createElement('div');
+                    wrapper.setAttribute('class','drawing');
 
-                // Celsius
-                let celsius = (temperature - 32) * (5 / 9);
-                temperatureDegree.textContent = Math.floor(celsius);
-                addTempFormat("C");
+                    // Attach styles
+                    wrapper.style.top = Math.random() * lat * 2.5 + "%";
+                    wrapper.style.left = Math.random() * lat * 2.5 + "%";
+            
+                    // Attach the created elements to the shadow dom
+                    shadow.appendChild(wrapper);
+                }
+            }
 
-                // Change temperature to Celsius/Farenheit 
-                function addTempFormat(format) {
-                    let sup = document.createElement("sup");
-                    let node = document.createTextNode(format);
-                    sup.appendChild(node);
-                    temperatureDegree.appendChild(sup);
-                };
+            customElements.define('drawing-div', DrawingDiv);
 
-                temperatureDegree.addEventListener('click', () => {
-                    temperatureDegree = document.querySelector(".temperature-degree");
-                    temperatureFormat = document.querySelector(".temperature sup");
-                    if (temperatureFormat.textContent === "F") {
+            const proxy = 'https://cors-anywhere.herokuapp.com/';
+            let api = `${proxy}https://api.darksky.net/forecast/6d17568a176251f3630f210af5bd987e/${lat},${long}`;
+
+            function getWeather() {
+                fetch(api)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        //Get Data
+                        let {temperature, summary, icon } = data.currently;
+        
+                        //Set DOM Elements from the APi
+                        temperatureDegree.textContent = temperature;
+                        temperatureDescription.textContent = summary;
+                        locationTimezone.textContent = data.timezone;
+        
+                        var precipIntensity = data.currently.precipIntensity;
+        
+                        // Celsius
+                        let celsius = (temperature - 32) * (5 / 9);
                         temperatureDegree.textContent = Math.floor(celsius);
                         addTempFormat("C");
-                    }
-                    else {
-                        temperatureDegree.textContent = temperature;
-                        addTempFormat("F");
-                    }
-                })
-
-                //Set colors and text based on weather conditions
-                if (celsius < 0) {
-                    document.body.style.setProperty('--color-one', '#4078C0');
-                    document.body.style.setProperty('--color-two', '#4078C0');
-                    document.body.style.setProperty('--text-weight', '950');
-                    document.body.style.setProperty('--text-width', '125%');
-                }
-                else if (celsius < 10) {
-                    document.body.style.setProperty('--color-one', '#BAB9B9');
-                    document.body.style.setProperty('--color-two', '#BAB9B9');
-                    document.body.style.setProperty('--text-weight', '712.5');
-                    document.body.style.setProperty('--text-width', '112.5%');
-                }
-                else if (celsius < 20) {
-                    document.body.style.setProperty('--color-one', '#FEEC37');
-                    document.body.style.setProperty('--color-two', '#FEEC37');
-                    document.body.style.setProperty('--text-weight', '475');
-                    document.body.style.setProperty('--text-width', '100%');
-                }
-                else if (celsius < 30) {
-                    document.body.style.setProperty('--color-one', '#F38B1E');
-                    document.body.style.setProperty('--color-two', '#F38B1E');
-                    document.body.style.setProperty('--text-weight', '237.5');
-                    document.body.style.setProperty('--text-width', '87.5%');
-                }
-                else if (celsius < 30) {
-                    document.body.style.setProperty('--color-one', '#F0050F');
-                    document.body.style.setProperty('--color-two', '#F0050F');
-                    document.body.style.setProperty('--text-weight', '125');
-                    document.body.style.setProperty('--text-width', '75%');
-                }
-
-                if (icon === "clear-day") {
-                    document.body.style.setProperty('--color-one', '#2C38A7');
-                }
-                else if (icon === "clear-night") {
-                    document.body.style.setProperty('--color-one', '#1C293A');
-                }
-                else if (icon === "rain") {
-                    document.body.style.setProperty('--color-two', '#264184');
-                    makeItRain();
-                    rainIntensity();
-                }
-                else if (icon === "snow", "sleet") {
-                    document.body.style.setProperty('--color-two', '#FFFFFF');
-                }
-                else {
-                    document.body.style.setProperty('--color-two', '#B4BAC6');
-                }
-
-                //Change rain intensity
-                function rainIntensity() {
-                    if (precipIntensity < 0.25) {
-                        document.querySelectorAll(".stem").forEach(element => {
-                            element.style.width = "1px";
-                        });
-                    }
-                    else if (precipIntensity < 0.50) {
-                        document.querySelectorAll(".stem").forEach(element => {
-                            element.style.width = "2px";
-                        });
-                    }
-                    else if (precipIntensity > 0.50) {
-                        document.querySelectorAll(".stem").forEach(element => {
-                            element.style.width = "3px";
-                        });
-                    }
-                }
-
-                // Set Icon
-                setIcons(icon, document.querySelector('.icon'));
-
-                function setIcons(icon, iconID) {
-                    const skycons = new Skycons({color: "#000"});
-                    const currentIcon = icon.replace(/-/g, "_").toUpperCase();
-                    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                        skycons.play();
-                    }
-                    return skycons.set(iconID, Skycons[currentIcon]);
-                }
-
-                //Create speak-aloud event
-                document.querySelector(".read-aloud").addEventListener('click', () => {
-                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("The temperature in " + data.timezone + " is currently " + Math.floor(celsius) + " degrees celsius. " + "Expect " + summary));
-                })
-
-                //Create share event
-                document.querySelector(".share").addEventListener('click', () => {
-                    if (navigator.share) {
-                        navigator.share({
-                          title: 'Weather App',
-                          text: 'This is a weather app',
-                          url: 'https://joebailey26.github.io/Weather-App/index.html',
+        
+                        // Change temperature to Celsius/Farenheit 
+                        function addTempFormat(format) {
+                            let sup = document.createElement("sup");
+                            let node = document.createTextNode(format);
+                            sup.appendChild(node);
+                            temperatureDegree.appendChild(sup);
+                        };
+        
+                        temperatureDegree.addEventListener('click', () => {
+                            temperatureDegree = document.querySelector(".temperature-degree");
+                            temperatureFormat = document.querySelector(".temperature sup");
+                            if (temperatureFormat.textContent === "F") {
+                                temperatureDegree.textContent = Math.floor(celsius);
+                                addTempFormat("C");
+                            }
+                            else {
+                                temperatureDegree.textContent = temperature;
+                                addTempFormat("F");
+                            }
                         })
-                    }
-                    else {
-                        window.open('mailto:?subject=Weather App', '_blank');
-                    }
-                })
+        
+                        //Set colors and text based on weather conditions
+                        if (celsius < 0) {
+                            document.body.style.setProperty('--color-one', '#4078C0');
+                            document.body.style.setProperty('--color-two', '#4078C0');
+                            document.body.style.setProperty('--text-weight', '950');
+                            document.body.style.setProperty('--text-width', '125%');
+                        }
+                        else if (celsius < 10) {
+                            document.body.style.setProperty('--color-one', '#BAB9B9');
+                            document.body.style.setProperty('--color-two', '#BAB9B9');
+                            document.body.style.setProperty('--text-weight', '712.5');
+                            document.body.style.setProperty('--text-width', '112.5%');
+                        }
+                        else if (celsius < 20) {
+                            document.body.style.setProperty('--color-one', '#FEEC37');
+                            document.body.style.setProperty('--color-two', '#FEEC37');
+                            document.body.style.setProperty('--text-weight', '475');
+                            document.body.style.setProperty('--text-width', '100%');
+                        }
+                        else if (celsius < 30) {
+                            document.body.style.setProperty('--color-one', '#F38B1E');
+                            document.body.style.setProperty('--color-two', '#F38B1E');
+                            document.body.style.setProperty('--text-weight', '237.5');
+                            document.body.style.setProperty('--text-width', '87.5%');
+                        }
+                        else if (celsius < 30) {
+                            document.body.style.setProperty('--color-one', '#F0050F');
+                            document.body.style.setProperty('--color-two', '#F0050F');
+                            document.body.style.setProperty('--text-weight', '125');
+                            document.body.style.setProperty('--text-width', '75%');
+                        }
+        
+                        if (icon === "clear-day") {
+                            document.body.style.setProperty('--color-one', '#2C38A7');
+                        }
+                        else if (icon === "clear-night") {
+                            document.body.style.setProperty('--color-one', '#1C293A');
+                        }
+                        else if (icon === "rain") {
+                            document.body.style.setProperty('--color-two', '#264184');
+                            makeItRain();
+                            rainIntensity();
+                        }
+                        else if (icon === "snow", "sleet") {
+                            document.body.style.setProperty('--color-two', '#FFFFFF');
+                        }
+                        else {
+                            document.body.style.setProperty('--color-two', '#B4BAC6');
+                        }
+        
+                        //Change rain intensity
+                        function rainIntensity() {
+                            if (precipIntensity < 0.25) {
+                                document.querySelectorAll(".stem").forEach(element => {
+                                    element.style.width = "1px";
+                                });
+                            }
+                            else if (precipIntensity < 0.50) {
+                                document.querySelectorAll(".stem").forEach(element => {
+                                    element.style.width = "2px";
+                                });
+                            }
+                            else if (precipIntensity > 0.50) {
+                                document.querySelectorAll(".stem").forEach(element => {
+                                    element.style.width = "3px";
+                                });
+                            }
+                        }
+        
+                        // Set Icon
+                        setIcons(icon, document.querySelector('.icon'));
+        
+                        function setIcons(icon, iconID) {
+                            const skycons = new Skycons({color: "#000"});
+                            const currentIcon = icon.replace(/-/g, "_").toUpperCase();
+                            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                skycons.play();
+                            }
+                            return skycons.set(iconID, Skycons[currentIcon]);
+                        }
+        
+                        //Create speak-aloud event
+                        document.querySelector(".read-aloud").addEventListener('click', () => {
+                            window.speechSynthesis.speak(new SpeechSynthesisUtterance("The temperature in " + data.timezone + " is currently " + Math.floor(celsius) + " degrees celsius. " + "Expect " + summary));
+                        })
+    
+                        //Create share event
+                        document.querySelector(".share").addEventListener('click', () => {
+                            if (navigator.share) {
+                                navigator.share({
+                                title: 'Weather App',
+                                text: 'This is a weather app',
+                                url: 'https://joebailey26.github.io/Weather-App/index.html',
+                                })
+                            }
+                            else {
+                                window.open('mailto:?subject=Weather App', '_blank');
+                            }
+                        })
 
-                //Create drawings
-                if (CSS.paintWorklet) { 
-                    CSS.paintWorklet.addModule('assets/js/drawing.js');
-                }
-                if (lat < 0) {
-                    lat = Math.abs(lat)
-                }
-                if (long < 0) {
-                    long = Math.abs(long)
-                }
-                document.body.style.setProperty('--lat', lat);
-                document.body.style.setProperty('--long', long);
-                document.body.style.setProperty('--drawing-color', 'rgba(' + lat + ',' + long + ',' + lat + ',' + 0.1 + ')');
+                        document.body.classList.add("loaded");
+                    })
+            }
+            getWeather();
 
-                // Create Drawing HTML Element
-                class DrawingDiv extends HTMLElement {
-                    constructor() {
-                        // Always call super first in constructor
-                        super();
-
-                        // Create a shadow root
-                        var shadow = this.attachShadow({mode: 'open'});
-                
-                        // Create element
-                        var wrapper = document.createElement('div');
-                        wrapper.setAttribute('class','drawing');
-
-                        // Attach styles
-                        wrapper.style.top = Math.random() * lat * 2.5 + "%";
-                        wrapper.style.left = Math.random() * lat * 2.5 + "%";
-                
-                        // Attach the created elements to the shadow dom
-                        shadow.appendChild(wrapper);
-                    }
-                }
-                customElements.define('drawing-div', DrawingDiv);
-
-                document.body.classList.add("loaded");
-
-            });
-
-        });
-   
+            //Refresh weather after 30 minutes
+            setInterval(function(){ getWeather(); }, 1.8e+6);
+        })
     }
-
 });
 
 var makeItRain = function() {  
