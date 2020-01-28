@@ -79,8 +79,14 @@ window.addEventListener('load', ()=> {
             if (lat < 0) {
                 drawingLat = Math.abs(lat)
             }
+            else {
+                drawingLat = lat
+            }
             if (long < 0) {
                 drawingLong = Math.abs(long)
+            }
+            else {
+                drawingLong = long
             }
             document.body.style.setProperty('--lat', drawingLat);
             document.body.style.setProperty('--long', drawingLong);
@@ -102,8 +108,14 @@ window.addEventListener('load', ()=> {
                     // Attach styles
                     wrapper.style.top = Math.random() * lat * 2.5 + "%";
                     wrapper.style.left = Math.random() * lat * 2.5 + "%";
+
+                    // Create some CSS to apply to the shadow dom
+                    var style = document.createElement('style');
+
+                    style.textContent = '.drawing {border-radius: 0;background-image: paint(drawing);position: absolute;width: 100px;height: 100px;z-index: -3;}'
             
                     // Attach the created elements to the shadow dom
+                    shadow.appendChild(style);
                     shadow.appendChild(wrapper);
                 }
             }

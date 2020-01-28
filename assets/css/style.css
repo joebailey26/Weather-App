@@ -98,14 +98,6 @@ body:not(.loaded) svg, body:not(.loaded) footer {
     font-weight: 600;
 }
 
-.drawing {
-    background-image: paint(drawing);
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    z-index: -3;
-}
-
 footer {
     font-size: 0.75em;
     margin: 1em auto;
