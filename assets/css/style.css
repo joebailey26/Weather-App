@@ -24,7 +24,6 @@
 @media (max-width: 650px) {
     body {
         font-size: 1.5em;
-        word-break: break-all;
     }
 }
 
