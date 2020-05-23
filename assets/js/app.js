@@ -272,6 +272,11 @@ window.addEventListener('load', ()=> {
                         document.querySelector(".read-aloud").addEventListener('click', () => {
                             window.speechSynthesis.speak(new SpeechSynthesisUtterance("The temperature in " + data.timezone + " is currently " + Math.floor(celsius) + " degrees celsius. " + "Expect " + summary));
                         })
+
+                        //Create vibrate event
+                        document.querySelector(".vibrate").addEventListener('click', () => {
+                           window.navigator.vibrate(500) 
+                        })
     
                         //Create share event
                         document.querySelector(".share").addEventListener('click', () => {
