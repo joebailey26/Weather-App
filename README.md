@@ -29,3 +29,5 @@ This App makes use of the [Dark Sky API](https://darksky.net/dev/docs) and [Skyc
 * Send notifications every 30 minutes even if app is not opened.
 
 * Use more bleeding edge APIs (Suggestions welcome).
+
+  * Conic Gradients
