@@ -31,6 +31,7 @@ html {
     min-height: 100%;
     align-content: center;
     display: grid;
+    --bodyMessage: 'Loading...'
 }
   
 body {
@@ -49,7 +50,7 @@ body {
 }
 
 body:before {
-    content: "Loading...";
+    content: var(--bodyMessage);
 }
 
 body.loaded:before {

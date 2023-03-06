@@ -142,8 +142,7 @@ window.addEventListener('load', ()=> {
 
             customElements.define('drawing-div', DrawingDiv);
 
-            const proxy = 'https://cors-anywhere.herokuapp.com/';
-            let api = `${proxy}https://api.darksky.net/forecast/6d17568a176251f3630f210af5bd987e/${lat},${long}`;
+            let api = `https://cors-wanker.joebailey.workers.dev/https://dev.pirateweather.net/forecast/WZM2YGIJNW7M37Kd93syJ5qKTaWEVRlA13Aa9haC/${lat},${long}`;
 
             function getWeather(refresh) {
                 fetch(api)
@@ -274,9 +273,13 @@ window.addEventListener('load', ()=> {
                         })
 
                         //Create vibrate event
-                        document.querySelector(".vibrate").addEventListener('click', () => {
-                           window.navigator.vibrate(500) 
-                        })
+                        if (window.navigator.vibrate(10)) {
+                            document.querySelector(".vibrate").addEventListener('click', () => {
+                            window.navigator.vibrate(500) 
+                            })
+                        } else {
+                            document.querySelector(".vibrate").style.display = 'none'
+                        }
     
                         //Create share event
                         document.querySelector(".share").addEventListener('click', () => {
@@ -288,11 +291,12 @@ window.addEventListener('load', ()=> {
                                 })
                             }
                             else {
-                                window.open('mailto:?subject=Weather App', '_blank');
+                                navigator.clipboard.writeText('https://joebailey26.github.io/Weather-App/index.html')
+                                alert('Copied the URL to your clipboard')
                             }
                         })
 
-                        document.body.classList.add("loaded");
+                        document.body.classList.add("loaded")
 
                         //Send Notification
                         if (refresh) {
@@ -317,7 +321,26 @@ window.addEventListener('load', ()=> {
 
             //Refresh weather after 30 minutes
             setInterval(function(){ getWeather("yes"); }, 1.8e+6);
-        })
+        }, geoError)
+    } else {
+        document.documentElement.style.setProperty("--bodyMessage", "'Geolocation is unavailable on this device.'")
+    }
+
+    function geoError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                document.documentElement.style.setProperty("--bodyMessage", "'User denied the request for Geolocation.'")
+                break;
+            case error.POSITION_UNAVAILABLE:
+                document.documentElement.style.setProperty("--bodyMessage", "'Location information is unavailable.'")
+                break;
+            case error.TIMEOUT:
+                document.documentElement.style.setProperty("--bodyMessage", "'The request to get user location timed out.'")
+                break;
+            case error.UNKNOWN_ERROR:
+                document.documentElement.style.setProperty("--bodyMessage", "'An unknown error occurred.'")
+                break;
+        }
     }
 });
 
